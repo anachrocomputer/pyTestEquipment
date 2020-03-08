@@ -68,7 +68,7 @@ def OpenSerialPort():
    Ser.baud = 9600
    Ser.timeout = 0.5
    Ser.open()
-   if Ser.open:
+   if Ser.is_open:
       Row = 0
       c.config(state=DISABLED)
       OpenButton.config(state=DISABLED)
