@@ -1,4 +1,4 @@
-# fy2200ctl --- control a FeelTech FY2200 via the serial port  2020-03-08
+# fy2200gui --- control a FeelTech FY2200 via the serial port  2020-03-08
 # Copyright (c) 2020 John Honniball. All rights reserved.
 
 from tkinter import *
@@ -10,11 +10,24 @@ import serial.tools.list_ports
 Row = 0
 
 def poopoo():
+   global Ser
+
    print("POO")
+   if Ser.is_open:
+      Ser.write(b'cf\n')
+      str = Ser.read(12)
+      print(str)
+      Ser.write(b'cd\n')
+      str = Ser.read(4)
+      print(str)
 
 
-def spinChange():
-   print(spinval.get())
+def spinChange1():
+   print(spinval1.get())
+
+
+def spinChange2():
+   print(spinval2.get())
 
 
 def comboChange(arg):
@@ -26,33 +39,53 @@ def comboChange(arg):
 
 def EnableAllControls(enabled):
    if enabled == True:
-      Sine.config(state=NORMAL)
-      Square.config(state=NORMAL)
-      Triangle.config(state=NORMAL)
+      Sine1.config(state=NORMAL)
+      Square1.config(state=NORMAL)
+      Triangle1.config(state=NORMAL)
+      Sine2.config(state=NORMAL)
+      Square2.config(state=NORMAL)
+      Triangle2.config(state=NORMAL)
+      s1.config(state=NORMAL)
+      s2.config(state=NORMAL)
    else:
-      Sine.config(state=DISABLED)
-      Square.config(state=DISABLED)
-      Triangle.config(state=DISABLED)
+      Sine1.config(state=DISABLED)
+      Square1.config(state=DISABLED)
+      Triangle1.config(state=DISABLED)
+      Sine2.config(state=DISABLED)
+      Square2.config(state=DISABLED)
+      Triangle2.config(state=DISABLED)
+      s1.config(state=DISABLED)
+      s2.config(state=DISABLED)
 
 
 def OpenSerialPort():
    global Row
    global Ser
+   global c
+   global w
 
    Ser.port = setting.get()
    Ser.baud = 9600
+   Ser.timeout = 0.5
    Ser.open()
    if Ser.open:
       Row = 0
-      root.after(1000, sendPoll)
       c.config(state=DISABLED)
       OpenButton.config(state=DISABLED)
       CloseButton.config(state=NORMAL)
       EnableAllControls(True)
+      Ser.write(b'a\n')
+      str = Ser.read(8).decode('utf-8')
+      if len(str) > 0:
+         w.config(text="FeelTech " + str[0:-1])
+      else:
+         w.config(text="Instrument did not respond")
 
 
 def CloseSerialPort():
    global Ser
+   global c
+   global w
 
    if Ser.is_open:
       Ser.close()
@@ -60,24 +93,13 @@ def CloseSerialPort():
       OpenButton.config(state=NORMAL)
       CloseButton.config(state=DISABLED)
       EnableAllControls(False)
-
-
-def sendPoll():
-   global Row
-   global Ser
-
-   if Ser.is_open:
-      print("POLL %d" % Row)
-      t.insert(END, "\n ROW OF TEXT %d" % Row)
-      t.see(END)
-      Row += 1
-      root.after(5000, sendPoll)
+      w.config(text="FeelTech FY22XX")
 
 
 root = Tk()
 root.title("FeelTech FY2200S")
 
-w = Label(root, text="FeelTech FY2200S")
+w = Label(root, text="FeelTech FY22XX")
 w.pack()
 
 f = Frame(root)
@@ -90,18 +112,54 @@ b1.pack(side='left')
 b2 = Button(f, text="Quit", command=root.destroy)
 b2.pack(side='right')
 
-f2 = Frame(root)
-f2.pack()
+Channel1 = Frame(root)
+Channel1.pack()
 
-l = Label(f2, text='Interval')
-l.pack(side='left')
+Freq1 = Label(Channel1, text='Frequency 1')
+Freq1.pack(side='left')
 
-spinval = StringVar()
-s = Spinbox(f2, from_=5, to=30, increment=5, width=4, textvariable=spinval, command=spinChange)
-s.pack(side='right')
+hz1 = Label(Channel1, text='Hz')
+hz1.pack(side='right')
 
-t = Text(root, width=40, height=8)
-t.pack()
+spinval1 = StringVar()
+s1 = Spinbox(Channel1, from_=1, to=12000000, increment=1, width=12, textvariable=spinval1, command=spinChange1)
+s1.pack(side='right')
+
+Wave1 = StringVar()
+Wave1.set('sine')
+WaveControls1 = Frame(root)
+WaveControls1.pack()
+Sine1 = Radiobutton(WaveControls1, text='Sine', variable=Wave1, value='sine')
+Square1 = Radiobutton(WaveControls1, text='Square', variable=Wave1, value='square')
+Triangle1 = Radiobutton(WaveControls1, text='Triangle', variable=Wave1, value='triangle')
+Sine1.pack(side='left')
+Square1.pack(side='left')
+Triangle1.pack(side='left')
+
+Channel2 = Frame(root)
+Channel2.pack()
+
+Freq2 = Label(Channel2, text='Frequency 2')
+Freq2.pack(side='left')
+
+hz2 = Label(Channel2, text='Hz')
+hz2.pack(side='right')
+
+spinval2 = StringVar()
+s2 = Spinbox(Channel2, from_=1, to=12000000, increment=1, width=12, textvariable=spinval2, command=spinChange2)
+s2.pack(side='right')
+
+Wave2 = StringVar()
+Wave2.set('sine')
+WaveControls2 = Frame(root)
+WaveControls2.pack()
+Sine2 = Radiobutton(WaveControls2, text='Sine', variable=Wave2, value='sine')
+Square2 = Radiobutton(WaveControls2, text='Square', variable=Wave2, value='square')
+Triangle2 = Radiobutton(WaveControls2, text='Triangle', variable=Wave2, value='triangle')
+Sine2.pack(side='left')
+Square2.pack(side='left')
+Triangle2.pack(side='left')
+
 
 # Look for available serial ports
 ports = serial.tools.list_ports.comports()
@@ -132,20 +190,8 @@ OpenButton = Button(PortControls, text='Open', command=OpenSerialPort)
 OpenButton.pack(side='right')
 
 CloseButton.config(state=DISABLED)
+EnableAllControls(False)
 
 Ser = serial.Serial()
-
-Wave = StringVar()
-Wave.set('sine')
-WaveControls = Frame(root)
-WaveControls.pack()
-Sine = Radiobutton(WaveControls, text='Sine', variable=Wave, value='sine')
-Square = Radiobutton(WaveControls, text='Square', variable=Wave, value='square')
-Triangle = Radiobutton(WaveControls, text='Triangle', variable=Wave, value='triangle')
-Sine.pack(side='left')
-Square.pack(side='left')
-Triangle.pack(side='left')
-
-EnableAllControls(False)
 
 root.mainloop()
