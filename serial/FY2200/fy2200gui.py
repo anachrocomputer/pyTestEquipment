@@ -23,11 +23,11 @@ def poopoo():
 
 
 def spinChange1():
-    print(spinval1.get())
+    print(Channel1FreqStr.get())
 
 
 def spinChange2():
-    print(spinval2.get())
+    print(Channel2FreqStr.get())
 
 
 def comboChange(arg):
@@ -45,8 +45,12 @@ def EnableAllControls(enabled):
         Sine2.config(state=NORMAL)
         Square2.config(state=NORMAL)
         Triangle2.config(state=NORMAL)
-        s1.config(state=NORMAL)
-        s2.config(state=NORMAL)
+        Channel1FreqSpin.config(state=NORMAL)
+        Channel1AmpSpin.config(state=NORMAL)
+        Channel1DutySpin.config(state=NORMAL)
+        Channel2FreqSpin.config(state=NORMAL)
+        Channel2AmpSpin.config(state=NORMAL)
+        Channel2DutySpin.config(state=NORMAL)
     else:
         Sine1.config(state=DISABLED)
         Square1.config(state=DISABLED)
@@ -54,8 +58,12 @@ def EnableAllControls(enabled):
         Sine2.config(state=DISABLED)
         Square2.config(state=DISABLED)
         Triangle2.config(state=DISABLED)
-        s1.config(state=DISABLED)
-        s2.config(state=DISABLED)
+        Channel1FreqSpin.config(state=DISABLED)
+        Channel1AmpSpin.config(state=DISABLED)
+        Channel1DutySpin.config(state=DISABLED)
+        Channel2FreqSpin.config(state=DISABLED)
+        Channel2AmpSpin.config(state=DISABLED)
+        Channel2DutySpin.config(state=DISABLED)
 
 
 def OpenSerialPort():
@@ -112,50 +120,109 @@ b1.pack(side='left')
 b2 = Button(f, text="Quit", command=root.destroy)
 b2.pack(side='right')
 
-Channel1 = Frame(root)
-Channel1.pack()
+Channel1Freq = Frame(root)
+Channel1Freq.pack()
 
-Freq1 = Label(Channel1, text='Frequency 1')
+Freq1 = Label(Channel1Freq, text='Frequency 1')
 Freq1.pack(side='left')
 
-hz1 = Label(Channel1, text='Hz')
+hz1 = Label(Channel1Freq, text='Hz')
 hz1.pack(side='right')
 
-spinval1 = StringVar()
-s1 = Spinbox(Channel1, from_=1, to=12000000, increment=1, width=12, textvariable=spinval1, command=spinChange1)
-s1.pack(side='right')
+Channel1FreqStr = StringVar()
+Channel1FreqSpin = Spinbox(Channel1Freq, from_=1, to=12000000, increment=1, width=10, textvariable=Channel1FreqStr, command=spinChange1)
+Channel1FreqSpin.pack(side='right')
+
+Channel1Amp = Frame(root)
+Channel1Amp.pack()
+
+Amp1 = Label(Channel1Amp, text='Amplitude 1')
+Amp1.pack(side='left')
+
+volt1 = Label(Channel1Amp, text='V')
+volt1.pack(side='right')
+
+Channel1AmpStr = StringVar()
+Channel1AmpSpin = Spinbox(Channel1Amp, from_=0, to=10.0, increment=0.01, width=5, textvariable=Channel1AmpStr)
+Channel1AmpSpin.pack(side='right')
+
+Channel1Duty = Frame(root)
+Channel1Duty.pack()
+
+Duty1 = Label(Channel1Duty, text='Duty Cycle 1')
+Duty1.pack(side='left')
+
+percent1 = Label(Channel1Duty, text='%')
+percent1.pack(side='right')
+
+Channel1DutyStr = StringVar()
+Channel1DutyStr.set('50')
+Channel1DutySpin = Spinbox(Channel1Duty, from_=0, to=100, increment=1, width=5, textvariable=Channel1DutyStr)
+Channel1DutySpin.pack(side='right')
 
 Wave1 = StringVar()
 Wave1.set('sine')
 WaveControls1 = Frame(root)
 WaveControls1.pack()
+Form1 = Label(WaveControls1, text='Waveform 1')
 Sine1 = Radiobutton(WaveControls1, text='Sine', variable=Wave1, value='sine')
 Square1 = Radiobutton(WaveControls1, text='Square', variable=Wave1, value='square')
 Triangle1 = Radiobutton(WaveControls1, text='Triangle', variable=Wave1, value='triangle')
+Form1.pack(side='left')
 Sine1.pack(side='left')
 Square1.pack(side='left')
 Triangle1.pack(side='left')
 
-Channel2 = Frame(root)
-Channel2.pack()
+Channel2Freq = Frame(root)
+Channel2Freq.pack()
 
-Freq2 = Label(Channel2, text='Frequency 2')
+Freq2 = Label(Channel2Freq, text='Frequency 2')
 Freq2.pack(side='left')
 
-hz2 = Label(Channel2, text='Hz')
+hz2 = Label(Channel2Freq, text='Hz')
 hz2.pack(side='right')
 
-spinval2 = StringVar()
-s2 = Spinbox(Channel2, from_=1, to=12000000, increment=1, width=12, textvariable=spinval2, command=spinChange2)
-s2.pack(side='right')
+Channel2FreqStr = StringVar()
+Channel2FreqSpin = Spinbox(Channel2Freq, from_=1, to=12000000, increment=1, width=10, textvariable=Channel2FreqStr, command=spinChange2)
+Channel2FreqSpin.pack(side='right')
+
+Channel2Amp = Frame(root)
+Channel2Amp.pack()
+
+Amp2 = Label(Channel2Amp, text='Amplitude 2')
+Amp2.pack(side='left')
+
+volt2 = Label(Channel2Amp, text='V')
+volt2.pack(side='right')
+
+Channel2AmpStr = StringVar()
+Channel2AmpSpin = Spinbox(Channel2Amp, from_=0, to=10.0, increment=0.01, width=5, textvariable=Channel2AmpStr)
+Channel2AmpSpin.pack(side='right')
+
+Channel2Duty = Frame(root)
+Channel2Duty.pack()
+
+Duty2 = Label(Channel2Duty, text='Duty Cycle 2')
+Duty2.pack(side='left')
+
+percent2 = Label(Channel2Duty, text='%')
+percent2.pack(side='right')
+
+Channel2DutyStr = StringVar()
+Channel2DutyStr.set('50')
+Channel2DutySpin = Spinbox(Channel2Duty, from_=0, to=100, increment=1, width=5, textvariable=Channel2DutyStr)
+Channel2DutySpin.pack(side='right')
+
 
 Wave2 = StringVar()
 Wave2.set('sine')
 WaveControls2 = Frame(root)
 WaveControls2.pack()
+Form2 = Label(WaveControls2, text='Waveform 2')
 Sine2 = Radiobutton(WaveControls2, text='Sine', variable=Wave2, value='sine')
 Square2 = Radiobutton(WaveControls2, text='Square', variable=Wave2, value='square')
 Triangle2 = Radiobutton(WaveControls2, text='Triangle', variable=Wave2, value='triangle')
+Form2.pack(side='left')
 Sine2.pack(side='left')
 Square2.pack(side='left')
 Triangle2.pack(side='left')
