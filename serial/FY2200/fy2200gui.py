@@ -10,90 +10,90 @@ import serial.tools.list_ports
 Row = 0
 
 def poopoo():
-   global Ser
+    global Ser
 
-   print("POO")
-   if Ser.is_open:
-      Ser.write(b'cf\n')
-      str = Ser.read(12)
-      print(str)
-      Ser.write(b'cd\n')
-      str = Ser.read(4)
-      print(str)
+    print("POO")
+    if Ser.is_open:
+        Ser.write(b'cf\n')
+        str = Ser.read(12)
+        print(str)
+        Ser.write(b'cd\n')
+        str = Ser.read(4)
+        print(str)
 
 
 def spinChange1():
-   print(spinval1.get())
+    print(spinval1.get())
 
 
 def spinChange2():
-   print(spinval2.get())
+    print(spinval2.get())
 
 
 def comboChange(arg):
-   global c
+    global c
 
-   c.selection_clear()
-   #print(setting.get())
+    c.selection_clear()
+    #print(setting.get())
 
 
 def EnableAllControls(enabled):
-   if enabled == True:
-      Sine1.config(state=NORMAL)
-      Square1.config(state=NORMAL)
-      Triangle1.config(state=NORMAL)
-      Sine2.config(state=NORMAL)
-      Square2.config(state=NORMAL)
-      Triangle2.config(state=NORMAL)
-      s1.config(state=NORMAL)
-      s2.config(state=NORMAL)
-   else:
-      Sine1.config(state=DISABLED)
-      Square1.config(state=DISABLED)
-      Triangle1.config(state=DISABLED)
-      Sine2.config(state=DISABLED)
-      Square2.config(state=DISABLED)
-      Triangle2.config(state=DISABLED)
-      s1.config(state=DISABLED)
-      s2.config(state=DISABLED)
+    if enabled == True:
+        Sine1.config(state=NORMAL)
+        Square1.config(state=NORMAL)
+        Triangle1.config(state=NORMAL)
+        Sine2.config(state=NORMAL)
+        Square2.config(state=NORMAL)
+        Triangle2.config(state=NORMAL)
+        s1.config(state=NORMAL)
+        s2.config(state=NORMAL)
+    else:
+        Sine1.config(state=DISABLED)
+        Square1.config(state=DISABLED)
+        Triangle1.config(state=DISABLED)
+        Sine2.config(state=DISABLED)
+        Square2.config(state=DISABLED)
+        Triangle2.config(state=DISABLED)
+        s1.config(state=DISABLED)
+        s2.config(state=DISABLED)
 
 
 def OpenSerialPort():
-   global Row
-   global Ser
-   global c
-   global w
+    global Row
+    global Ser
+    global c
+    global w
 
-   Ser.port = setting.get()
-   Ser.baud = 9600
-   Ser.timeout = 0.5
-   Ser.open()
-   if Ser.is_open:
-      Row = 0
-      c.config(state=DISABLED)
-      OpenButton.config(state=DISABLED)
-      CloseButton.config(state=NORMAL)
-      EnableAllControls(True)
-      Ser.write(b'a\n')
-      str = Ser.read(8).decode('utf-8')
-      if len(str) > 0:
-         w.config(text="FeelTech " + str[0:-1])
-      else:
-         w.config(text="Instrument did not respond")
+    Ser.port = setting.get()
+    Ser.baud = 9600
+    Ser.timeout = 0.5
+    Ser.open()
+    if Ser.is_open:
+        Row = 0
+        c.config(state=DISABLED)
+        OpenButton.config(state=DISABLED)
+        CloseButton.config(state=NORMAL)
+        EnableAllControls(True)
+        Ser.write(b'a\n')
+        str = Ser.read(8).decode('utf-8')
+        if len(str) > 0:
+            w.config(text="FeelTech " + str[0:-1])
+        else:
+            w.config(text="Instrument did not respond")
 
 
 def CloseSerialPort():
-   global Ser
-   global c
-   global w
+    global Ser
+    global c
+    global w
 
-   if Ser.is_open:
-      Ser.close()
-      c.config(state=NORMAL)
-      OpenButton.config(state=NORMAL)
-      CloseButton.config(state=DISABLED)
-      EnableAllControls(False)
-      w.config(text="FeelTech FY22XX")
+    if Ser.is_open:
+        Ser.close()
+        c.config(state=NORMAL)
+        OpenButton.config(state=NORMAL)
+        CloseButton.config(state=DISABLED)
+        EnableAllControls(False)
+        w.config(text="FeelTech FY22XX")
 
 
 root = Tk()
@@ -166,13 +166,13 @@ ports = serial.tools.list_ports.comports()
 
 portList = []
 for p in ports:
-   portList.append(p.device)
+    portList.append(p.device)
 
 setting = StringVar()
 if len(ports) > 0:
-   setting.set(ports[0].device)
+    setting.set(ports[0].device)
 else:
-   setting.set('')
+    setting.set('')
 
 PortControls = Frame(root)
 PortControls.pack()
